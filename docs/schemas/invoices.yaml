@@ -1,0 +1,108 @@
+InvoiceVarianceDetail:
+  type: object
+  properties:
+    baseRate:
+      type: number
+    fuelSurcharge:
+      type: number
+    unauthorizedAccessorial:
+      type: number
+    variance:
+      type: number
+    reason:
+      type: string
+
+Invoice:
+  type: object
+  properties:
+    id:
+      type: string
+    invoiceId:
+      type: string
+      example: INV-88421
+    shipmentId:
+      type: string
+      example: VTS-2026-04821
+    shipmentShort:
+      type: string
+      example: VTS-04821
+    carrier:
+      type: string
+    expectedAmount:
+      type: number
+    submittedAmount:
+      type: number
+    expected:
+      type: string
+      example: $4,280
+    submitted:
+      type: string
+    variance:
+      type: number
+    hasVariance:
+      type: boolean
+    status:
+      type: string
+      enum: [Pending, Approved, "On Hold", Rejected]
+    holdReason:
+      type: string
+    varianceDetail:
+      $ref: '#/components/schemas/InvoiceVarianceDetail'
+
+InvoiceSummaryStats:
+  type: object
+  properties:
+    approvedCount:
+      type: integer
+    approvedTotal:
+      type: number
+    approvedTotalFormatted:
+      type: string
+    onHoldCount:
+      type: integer
+    matchRate:
+      type: number
+    totalInvoices:
+      type: integer
+
+InvoiceSummaryResponse:
+  type: object
+  properties:
+    stats:
+      $ref: '#/components/schemas/InvoiceSummaryStats'
+
+InvoiceListResponse:
+  type: object
+  properties:
+    invoices:
+      type: array
+      items:
+        $ref: '#/components/schemas/Invoice'
+    stats:
+      $ref: '#/components/schemas/InvoiceSummaryStats'
+
+InvoiceResponse:
+  type: object
+  properties:
+    invoice:
+      $ref: '#/components/schemas/Invoice'
+
+UpdateInvoiceRequest:
+  type: object
+  properties:
+    action:
+      type: string
+      enum: [approve, reject, hold]
+    status:
+      type: string
+      enum: [Pending, Approved, "On Hold", Rejected]
+    reason:
+      type: string
+
+UpdateInvoiceResponse:
+  type: object
+  properties:
+    invoice:
+      $ref: '#/components/schemas/Invoice'
+    message:
+      type: string

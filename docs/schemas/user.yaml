@@ -1,0 +1,62 @@
+User:
+  type: object
+  properties:
+    id:
+      type: string
+    name:
+      type: string
+    email:
+      type: string
+      format: email
+    role:
+      type: string
+      example: admin
+
+LoginRequest:
+  type: object
+  required: [email, password]
+  properties:
+    email:
+      type: string
+      format: email
+      example: admin@vitusa.com
+    password:
+      type: string
+      format: password
+      example: password123
+
+LoginResponse:
+  type: object
+  properties:
+    token:
+      type: string
+    user:
+      $ref: '#/components/schemas/User'
+
+RegisterRequest:
+  type: object
+  required: [name, email, password]
+  properties:
+    name:
+      type: string
+      example: Sarah Chen
+    email:
+      type: string
+      format: email
+      example: sarah.chen@vitusa.com
+    password:
+      type: string
+      format: password
+      example: password123
+
+RegisterResponse:
+  type: object
+  properties:
+    user:
+      $ref: '#/components/schemas/User'
+
+MeResponse:
+  type: object
+  properties:
+    user:
+      $ref: '#/components/schemas/User'

@@ -1,0 +1,82 @@
+UserDetail:
+  type: object
+  properties:
+    id:
+      type: string
+    name:
+      type: string
+    email:
+      type: string
+      format: email
+    role:
+      type: string
+      enum: [admin, coordinator, finance, carrier]
+    department:
+      type: string
+    carrierPortal:
+      type: string
+      enum: [none, enabled, full]
+    status:
+      type: string
+      enum: [active, inactive]
+    lastLogin:
+      type: string
+
+UserListResponse:
+  type: object
+  properties:
+    users:
+      type: array
+      items:
+        $ref: '#/components/schemas/UserDetail'
+    stats:
+      type: object
+      properties:
+        activeUsers:
+          type: integer
+        totalUsers:
+          type: integer
+        roleCount:
+          type: integer
+        carrierPortalAccounts:
+          type: integer
+
+CreateUserRequest:
+  type: object
+  required: [name, email, password, role]
+  properties:
+    name:
+      type: string
+      example: Sarah Chen
+    email:
+      type: string
+      format: email
+      example: sarah.chen@vitusa.com
+    password:
+      type: string
+      format: password
+      example: password123
+    role:
+      type: string
+      enum: [admin, coordinator, finance, carrier]
+      example: coordinator
+    department:
+      type: string
+      example: Logistics
+
+UpdateUserRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    role:
+      type: string
+      enum: [admin, coordinator, finance, carrier]
+    department:
+      type: string
+
+UserResponse:
+  type: object
+  properties:
+    user:
+      $ref: '#/components/schemas/UserDetail'

@@ -1,0 +1,127 @@
+/api/invoices/summary:
+  get:
+    tags: [Freight Audit]
+    summary: Get freight audit summary stats
+    security:
+      - bearerAuth: []
+    responses:
+      '200':
+        description: Summary statistics
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceSummaryResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
+/api/invoices:
+  get:
+    tags: [Freight Audit]
+    summary: List invoices
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum: [Pending, Approved, "On Hold", Rejected]
+    responses:
+      '200':
+        description: Invoice list with stats
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceListResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
+/api/invoices/{id}:
+  get:
+    tags: [Freight Audit]
+    summary: Get invoice detail
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Invoice ID (e.g. INV-88421) or MongoDB id
+    responses:
+      '200':
+        description: Invoice detail
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      '404':
+        description: Invoice not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+  patch:
+    tags: [Freight Audit]
+    summary: Update invoice status
+    description: Admin or finance only — approve, reject, or hold an invoice
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateInvoiceRequest'
+    responses:
+      '200':
+        description: Invoice updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInvoiceResponse'
+      '400':
+        description: Validation error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      '403':
+        description: Forbidden
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      '404':
+        description: Invoice not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'

@@ -1,0 +1,17 @@
+DashboardSummaryResponse:
+  type: object
+  properties:
+    summary:
+      type: object
+    pipeline:
+      type: array
+      items:
+        type: object
+    activeLoads:
+      type: array
+      items:
+        type: object
+    exceptionFeed:
+      type: array
+      items:
+        type: object

@@ -1,0 +1,154 @@
+/api/shipments:
+  get:
+    tags: [Shipments]
+    summary: List shipments
+    description: Paginated list with optional filters
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: query
+        name: mode
+        schema:
+          type: string
+          enum: [Bulk, TL, LTL, Intermodal]
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum: [Draft, Tendered, Dispatched, In Transit, Delivered, Delayed, Blind, Exception]
+      - in: query
+        name: carrier
+        schema:
+          type: string
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 20
+    responses:
+      '200':
+        description: Shipment list
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipmentListResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
+  post:
+    tags: [Shipments]
+    summary: Create shipment
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateShipmentRequest'
+    responses:
+      '201':
+        description: Shipment created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipmentDetailResponse'
+      '400':
+        description: Validation error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
+/api/shipments/{id}:
+  get:
+    tags: [Shipments]
+    summary: Get shipment detail
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        example: VTS-2026-04821
+    responses:
+      '200':
+        description: Shipment details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipmentDetailResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      '404':
+        description: Shipment not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
+  patch:
+    tags: [Shipments]
+    summary: Update shipment
+    description: Tender carrier, accept tender, or advance shipment status
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        example: VTS-2026-04821
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateShipmentRequest'
+    responses:
+      '200':
+        description: Shipment updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipmentDetailResponse'
+      '400':
+        description: Validation or invalid status transition
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      '404':
+        description: Shipment not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'

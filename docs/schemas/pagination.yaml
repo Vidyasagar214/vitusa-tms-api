@@ -1,0 +1,39 @@
+Pagination:
+  type: object
+  properties:
+    page:
+      type: integer
+      example: 1
+    limit:
+      type: integer
+      example: 20
+    total:
+      type: integer
+      example: 5
+    totalPages:
+      type: integer
+      example: 1
+
+ShipmentListResponse:
+  type: object
+  properties:
+    shipments:
+      type: array
+      items:
+        $ref: '#/components/schemas/Shipment'
+    pagination:
+      $ref: '#/components/schemas/Pagination'
+    countsByMode:
+      type: object
+      additionalProperties:
+        type: integer
+      example:
+        Bulk: 3
+        TL: 1
+        LTL: 1
+
+ShipmentDetailResponse:
+  type: object
+  properties:
+    shipment:
+      $ref: '#/components/schemas/ShipmentDetail'

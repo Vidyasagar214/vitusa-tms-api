@@ -1,0 +1,32 @@
+openapi: 3.0.3
+
+info:
+  title: Vitusa TMS API
+  version: 1.0.0
+  description: Transportation Management System APIs
+
+servers:
+  - url: http://localhost:5000
+    description: Local development
+
+tags:
+  - name: Auth
+    description: Authentication and current user
+  - name: Shipments
+    description: Shipment list and detail
+  - name: Dashboard
+    description: Control tower summary and analytics
+  - name: Users
+    description: User management (admin only)
+  - name: Master Data
+    description: Customers, locations, carriers, and commodities
+  - name: Freight Audit
+    description: Invoice queue, variance review, and AP export
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT from POST /api/auth/login

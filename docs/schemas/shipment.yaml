@@ -1,0 +1,153 @@
+Shipment:
+  type: object
+  properties:
+    id:
+      type: string
+      example: VTS-2026-04821
+    po:
+      type: string
+      example: PO-88421
+    customer:
+      type: string
+      example: Food Mfg Chicago
+    commodity:
+      type: string
+      example: Glycerine USP Kosher
+    lane:
+      type: string
+      example: Newark, NJ → Chicago, IL
+    mode:
+      type: string
+      enum: [Bulk, TL, LTL, Intermodal]
+    status:
+      type: string
+      enum: [Draft, Tendered, Dispatched, In Transit, Delivered, Delayed, Blind, Exception]
+    pickup:
+      type: string
+      example: Jun 15
+    carrier:
+      type: string
+      example: Midwest Tank Lines
+    rate:
+      type: string
+      example: $4,280
+    statusPulse:
+      type: boolean
+      example: false
+
+ShipmentDetail:
+  allOf:
+    - $ref: '#/components/schemas/Shipment'
+    - type: object
+      properties:
+        rateDetailed:
+          type: string
+          example: $4,280.00
+        pickupDate:
+          type: string
+          example: Jun 15, 2026
+        deliveryDate:
+          type: string
+        origin:
+          type: string
+          example: Newark, NJ
+        destination:
+          type: string
+          example: Chicago, IL
+        createdAt:
+          type: string
+        laneTemplate:
+          type: string
+        bolStatus:
+          type: string
+        subtitle:
+          type: string
+        meta:
+          type: string
+        freightCost:
+          type: object
+          nullable: true
+        route:
+          type: object
+          nullable: true
+        carrierInfo:
+          type: object
+          nullable: true
+        milestones:
+          type: array
+          items:
+            type: object
+        bulkRequirements:
+          type: array
+          items:
+            type: object
+        documents:
+          type: array
+          items:
+            type: object
+        auditTrail:
+          type: array
+          items:
+            type: object
+
+CreateShipmentRequest:
+  type: object
+  required: [customer, commodity, mode, rate]
+  properties:
+    customer:
+      type: string
+      example: Food Mfg Chicago
+    commodity:
+      type: string
+      example: Glycerine USP Kosher
+    origin:
+      type: string
+      example: Newark, NJ
+    destination:
+      type: string
+      example: Chicago, IL
+    lane:
+      type: string
+      example: Newark, NJ → Chicago, IL
+    mode:
+      type: string
+      enum: [Bulk, TL, LTL, Intermodal]
+    rate:
+      type: number
+      example: 4280
+    poNumber:
+      type: string
+      example: PO-88421
+    carrier:
+      type: string
+      example: Midwest Tank Lines
+    pickupDate:
+      type: string
+      format: date
+      example: 2026-06-20
+    deliveryDate:
+      type: string
+      format: date
+      example: 2026-06-23
+    laneTemplate:
+      type: string
+    status:
+      type: string
+      enum: [Draft, Tendered]
+      default: Draft
+
+UpdateShipmentRequest:
+  type: object
+  properties:
+    action:
+      type: string
+      enum: [tender, acceptTender, accept_tender, dispatch, in_transit, deliver, delay]
+      description: Shipment lifecycle action
+    status:
+      type: string
+      enum: [Draft, Tendered, Dispatched, In Transit, Delivered, Delayed, Blind, Exception]
+      description: Direct status transition (alternative to action)
+    carrier:
+      type: string
+      description: Required for tender action; optional carrier update otherwise
+      example: Midwest Tank Lines

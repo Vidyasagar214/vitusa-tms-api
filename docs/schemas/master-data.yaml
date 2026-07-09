@@ -1,0 +1,168 @@
+MasterDataSummaryResponse:
+  type: object
+  properties:
+    counts:
+      type: object
+      properties:
+        customers: { type: integer }
+        locations: { type: integer }
+        carriers: { type: integer }
+        commodities: { type: integer }
+
+Customer:
+  type: object
+  properties:
+    id: { type: string }
+    name: { type: string }
+    code: { type: string }
+    contactEmail: { type: string }
+    status: { type: string, enum: [active, inactive] }
+
+Location:
+  type: object
+  properties:
+    id: { type: string }
+    name: { type: string }
+    type: { type: string, enum: [shipper, receiver, both] }
+    city: { type: string }
+    state: { type: string }
+    address: { type: string }
+    label: { type: string }
+    customerId: { type: string, nullable: true }
+    status: { type: string, enum: [active, inactive] }
+
+Carrier:
+  type: object
+  properties:
+    id: { type: string }
+    name: { type: string }
+    scac: { type: string }
+    ediConnected: { type: boolean }
+    portalEnabled: { type: boolean }
+    modes:
+      type: array
+      items:
+        type: string
+        enum: [Bulk, TL, LTL, Intermodal]
+    status: { type: string, enum: [active, inactive] }
+
+BulkRequirement:
+  type: object
+  properties:
+    label: { type: string }
+    value: { type: string }
+    highlight: { type: boolean }
+
+Commodity:
+  type: object
+  properties:
+    id: { type: string }
+    name: { type: string }
+    mode: { type: string, enum: [Bulk, TL, LTL, Intermodal] }
+    customerId: { type: string, nullable: true }
+    bulkRequirements:
+      type: array
+      items:
+        $ref: '#/components/schemas/BulkRequirement'
+    status: { type: string, enum: [active, inactive] }
+
+CustomerListResponse:
+  type: object
+  properties:
+    customers:
+      type: array
+      items:
+        $ref: '#/components/schemas/Customer'
+
+LocationListResponse:
+  type: object
+  properties:
+    locations:
+      type: array
+      items:
+        $ref: '#/components/schemas/Location'
+
+CarrierListResponse:
+  type: object
+  properties:
+    carriers:
+      type: array
+      items:
+        $ref: '#/components/schemas/Carrier'
+
+CommodityListResponse:
+  type: object
+  properties:
+    commodities:
+      type: array
+      items:
+        $ref: '#/components/schemas/Commodity'
+
+CreateCustomerRequest:
+  type: object
+  required: [name]
+  properties:
+    name: { type: string, example: Food Mfg Chicago }
+    code: { type: string, example: FMC }
+    contactEmail: { type: string, format: email }
+
+CreateLocationRequest:
+  type: object
+  required: [name, city, state]
+  properties:
+    name: { type: string, example: Vitusa Newark }
+    type: { type: string, enum: [shipper, receiver, both], default: both }
+    city: { type: string, example: Newark }
+    state: { type: string, example: NJ }
+    address: { type: string }
+    customerId: { type: string }
+
+CreateCarrierRequest:
+  type: object
+  required: [name]
+  properties:
+    name: { type: string, example: Midwest Tank Lines }
+    scac: { type: string, example: MWTL }
+    ediConnected: { type: boolean, default: false }
+    portalEnabled: { type: boolean, default: false }
+    modes:
+      type: array
+      items:
+        type: string
+        enum: [Bulk, TL, LTL, Intermodal]
+
+CreateCommodityRequest:
+  type: object
+  required: [name]
+  properties:
+    name: { type: string, example: Refined Glycerine USP Kosher }
+    mode: { type: string, enum: [Bulk, TL, LTL, Intermodal], default: Bulk }
+    customerId: { type: string }
+    bulkRequirements:
+      type: array
+      items:
+        $ref: '#/components/schemas/BulkRequirement'
+
+CustomerResponse:
+  type: object
+  properties:
+    customer:
+      $ref: '#/components/schemas/Customer'
+
+LocationResponse:
+  type: object
+  properties:
+    location:
+      $ref: '#/components/schemas/Location'
+
+CarrierResponse:
+  type: object
+  properties:
+    carrier:
+      $ref: '#/components/schemas/Carrier'
+
+CommodityResponse:
+  type: object
+  properties:
+    commodity:
+      $ref: '#/components/schemas/Commodity'

@@ -1,0 +1,7 @@
+ErrorResponse:
+  type: object
+  properties:
+    message:
+      type: string
+  example:
+    message: Not authorized, no token
