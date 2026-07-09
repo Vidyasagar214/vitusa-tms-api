@@ -193,5 +193,6 @@ Seed scripts were also added for users, shipments, master data, invoices, and ad
 ## Verification Notes
 
 - Git history and file stats were inspected with `git log` and `git show --stat`.
-- Swagger runtime assembly was attempted with Node, but local verification could not complete because dependencies were not installed in the workspace (`Cannot find module 'yamljs'`). `yamljs` is declared in `package.json` and `package-lock.json`, so this appears to be an environment setup state rather than a missing manifest dependency.
+- `npm ci` completed successfully with 0 reported vulnerabilities.
+- Swagger runtime assembly was verified with Node after dependency installation. The assembled document loaded successfully with 16 path entries and 46 component schemas.
 - `npm test` was not run because the current test script is a placeholder that exits with `Error: no test specified`.
