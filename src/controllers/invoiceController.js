@@ -103,6 +103,63 @@ exports.getInvoiceById = async (req, res) => {
   }
 };
 
+const escapeCsvValue = (value) => {
+  const text = String(value ?? "");
+
+  if (/[",\n]/.test(text)) {
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  return text;
+};
+
+const buildApExportCsv = (invoices) => {
+  const headers = [
+    "Invoice ID",
+    "Shipment ID",
+    "Carrier",
+    "Expected Amount",
+    "Submitted Amount",
+    "Variance",
+    "Status",
+    "Export Date"
+  ];
+
+  const exportDate = new Date().toISOString().split("T")[0];
+
+  const rows = invoices.map((invoice) => [
+    invoice.invoiceId,
+    invoice.shipmentId,
+    invoice.carrier,
+    invoice.expectedAmount.toFixed(2),
+    invoice.submittedAmount.toFixed(2),
+    (invoice.submittedAmount - invoice.expectedAmount).toFixed(2),
+    invoice.status,
+    exportDate
+  ]);
+
+  return [headers, ...rows]
+    .map((row) => row.map(escapeCsvValue).join(","))
+    .join("\n");
+};
+
+exports.exportApprovedInvoices = async (req, res) => {
+  try {
+    const invoices = await Invoice.find({ status: "Approved" }).sort({
+      createdAt: -1
+    });
+
+    const exportDate = new Date().toISOString().split("T")[0];
+    const filename = `vitusa-ap-export-${exportDate}.csv`;
+
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.status(200).send(buildApExportCsv(invoices));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.updateInvoice = async (req, res) => {
   try {
     const { action, status } = req.body;

@@ -18,6 +18,34 @@
             schema:
               $ref: '#/components/schemas/ErrorResponse'
 
+/api/invoices/export:
+  get:
+    tags: [Freight Audit]
+    summary: Export approved invoices as CSV
+    description: Admin or finance only — downloads payment-ready approved invoices
+    security:
+      - bearerAuth: []
+    responses:
+      '200':
+        description: CSV file download
+        content:
+          text/csv:
+            schema:
+              type: string
+              format: binary
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      '403':
+        description: Forbidden
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
 /api/invoices:
   get:
     tags: [Freight Audit]
